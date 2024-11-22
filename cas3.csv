@@ -1,0 +1,13 @@
+﻿ID;Descripció_GEO;Temperatura;Num;Gen
+GSM2696488;WT Room Temperature Brown fat, biological rep1;Ambient;1;WT
+GSM2696489;WT Room Temperature Brown fat, biological rep2;Ambient;2;WT
+GSM2696490;WT Room Temperature Brown fat, biological rep3;Ambient;3;WT
+GSM2696491;KO Room Temperature Brown fat, biological rep1;Ambient;1;KO
+GSM2696492;KO Room Temperature Brown fat, biological rep2;Ambient;2;KO
+GSM2696493;KO Room Temperature Brown fat, biological rep3;Ambient;3;KO
+GSM2696494;WT Cold Brown fat, biological rep1;Fred;1;WT
+GSM2696495;WT Cold Brown fat, biological rep2;Fred;2;WT
+GSM2696496;WT Cold Brown fat, biological rep3;Fred;3;WT
+GSM2696497;KO Cold Brown fat, biological rep1;Fred;1;KO
+GSM2696498;KO Cold Brown fat, biological rep2;Fred;2;KO
+GSM2696499;KO Cold Brown fat, biological rep3;Fred;3;KO

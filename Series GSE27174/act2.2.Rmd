@@ -1,0 +1,146 @@
+---
+title: "ACTIVITAT 2.2"
+author: "Ànnia Castillo Niell"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r class.source = 'fold-hide', setup, include=FALSE}
+library(knitr)
+library(rmdformats)
+library(readr)
+library(dplyr)
+library(limma)
+options(max.print="75")
+opts_chunk$set(echo=TRUE, 
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+```{r}
+setwd("/Users/annia/Desktop/UOC/DADES ÒMIQUES/ACT2.2")
+WorkingDir<-getwd()
+DataDir <- file.path(WorkingDir, "dades") 
+ResultsDir <- file.path(WorkingDir, "resultats") 
+```
+## TAULA DE CONTINGUTS
+
+-   [CAS 1: Efecto del tratamiento con SHAM1 en la expresión de células T-ALL](#Efecto-del-tratamiento-son-SHAM1-en-la-expresión-de-células-T-ALL)
+-   [CAS 2: Comparación entre tres tipos de cáncer de mama](#)
+
+# CAS 1: Efecto del tratamiento con SHAM1 en la expresión de células T-ALL
+El conjunto de datos para el ejercicio está disponible en la entrada de la Serie GSE18198 en Gene Expression Omnibus. Consiste en el análisis de perfiles de expresión de líneas celulares humanas T-ALL tratadas con DMSO o SAHM1. En resumen, las proteínas NOTCH regulan vías de señalización involucradas en la diferenciación celular, proliferación y muerte. La sobreactivación de la señalización Notch se ha observado en numerosos cánceres y se ha estudiado extensamente en el contexto de la leucemia
+linfoblástica aguda de células T (T-ALL), donde más del 50% de los pacientes tienen NOTCH1 mutante. Moduladores de pequeñas moléculas de estas proteínas serían importantes para entender el papel de las proteínas NOTCH en procesos biológicos malignos y normales. En este estudio, los investigadores estaban interesados en medir los cambios globales en la expresión génica tras el tratamiento de las líneas celulares T-ALL humanas HPB-ALL y KOPT-K1 con solo vehículo (DMSO) o SAHM1, un péptido alfa-helicoidal derivado de la proteína coactivadora MAML1.
+Por lo tanto, diseñaron un experimento que consiste en cultivos triplicados de células KOPTK1 o HPB-ALL tratadas con DMSO solo o SAHM1 (20 uM) durante 24 horas. Se extrajo ARN total y se hibridó a microarrays de Affymetrix human U133 plus 2.0 (tres arrays por tratamiento por línea celular, para un total de 12 arrays).
+
+### 1. DESCRIU - I EL NOM - DEL DISENY EXPERIMENTAL. IDENTIFICA ELS FACTORS EXPERIMENTALS I ELS SEUS NIVELLS. 
+En aquest cas tenim un disseny de dos factors amb interacció: estem estudiant dues línies cel·lulars (KOPTK1 i HPB-ALL, dos nivells inicials) i com respon cada una d'aquestes a un tractament diferent (DMSO o SAHM1, dos nivells més). Per assegurar que les diferències que hi puguin haver siguin reals, s'ha triplicat cada combinació:
+- KOPTK1 + DMSO x3
+- KOPTK1 + SAHM1 x3
+- HPB-ALL + DMSO x3
+- HPB-ALL + SAHM1 x3
+
+
+### 2. ESCRIU LA MATRIU DE DISENY ASSOCIADA A AQUEST DISENY EXPERIMENTAL.
+```{R}
+library(readr)
+CAS1 <- read_delim("CAS1.csv", delim = ";", 
+    escape_double = FALSE, trim_ws = TRUE)
+View(CAS1)
+```
+
+
+
+### 3. CONSTRUEIX LA MATRIU DE CONTRAST QUE ES POT UTILITZAR PER RESPONDRE A LES SEGËUNTS PREGUNTES: 
+*Compara l'efecte de SHAM1 a la línia cel·lular KOPT-K1: KOPT-K1 tractat amb SHAM1 vs a KOPT-K1 tractat amb DMSO (el vehicle).*
+*L'efecte de SHAM1 a la línia cel·lular HBP-ALL: HPB-ALL tractat amb SHAM1 vs HPB-ALL tractat amb DMSO.*
+*La interacció: la diferència entre els dos efectes anteriors.*
+
+
+
+
+# CAS 2: Comparación entre tres tipos de cáncer de mama
+
+Este estudio de caso se basa en un artículo publicado en cuyos datos están disponibles en GEO como serie GSE1561 en el siguiente enlace <http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE1561> Los investigadores investigaron tres tipos de tumores de cáncer de mama: apocrino (APO), basal (BAS) y luminal (LUMI). La clasificación se basa en la resistencia de los tumores a los receptores de estrógenos y andrógenos.
+
+• Los tumores clasificados como “APO” son negativos para el receptor de estrógeno (ER-) y positivos para el receptor de andrógeno (AR +).
+
+• Aquellos clasificados como “LUMI” son ER + y AR + y
+
+• Aquellos clasificados como “BAS” son ER- y AR.
+
+La asignación de cada muestra a un grupo experimental se puede obtener en este enlace:
+<http://www.ncbi.nlm.nih.gov/geo/gds/profileGraph.cgi?gds=1329> Obviamente, este es un estudio observacional, pero su análisis también se puede realizar utilizando un enfoque de modelo lineal.
+
+### 1. IDENTIFICA ELS FACTOR EXPERIMENTALS I ELS SEUS NIVELLS
+En aquest estudi no hi ha una intervenció, però sí que podem veure que el que principalment es vol veure és el *tipus de càncer de mama*. Dins dels tipus, existeixen tres categories:
+
+-   Molecular Apocrí (APO)
+
+-   Basal (BAS)
+
+-   Luminal (LUMI)
+
+Les diferències entre ells serà la resistència dels receptors als estrògens i/o andrògens.
+
+He copiat la taula de <https://www.ncbi.nlm.nih.gov/geo/tools/profileGraph.cgi?ID=GDS1329> perquè així els arxius estaven ordenats per poder classificar de forma ràpida si eren APO, BAS o LUMI. De la mateixa manera amb el color i receptors positius o negatius. Queda pendent emplenar la columna de shortname que ho farem ara a R. Importem el fitxer csv:
+
+```{r}
+taula1 <- read_delim("~/Desktop/UOC/DADES ÒMIQUES/ACT2.2/GSE1561/taula1.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+View(taula1)
+#acabem de completar la taula creant els shortname per utilitzar més endavant si fes falta. 
+taula2 <- taula1 %>%
+  mutate(
+    ShortName = paste0(
+      sub(".*(..)\\.CEL$", "\\1", FileName), # Extreu els dos últims dígits abans de ".CEL"
+      "_",
+      Grup # Afegeix el grup
+    )
+  )
+head(taula2)
+```
+
+### 2. CREAR LA MATRIU DE DISSENY
+Aquesta taula que ja tenim creada, ens facila ara enormement la vida per a crear la matriu de disseny. Aquesta és l'estructura experimental de les dades i per tant tindrem tres columnes (APO, BAS i LUMI) i cada fila serà una mostra:
+
+```{r}
+#agafem la columa de grups
+grup_tumor<-taula2$Grup
+#construïm la matriu
+matriu.disseny <- model.matrix(~ 0 + factor(grup_tumor))
+#assegurem que sigui tipus factor
+colnames(matriu.disseny) <- levels(factor(grup_tumor)) 
+head(matriu.disseny, n=10)
+dim(matriu.disseny)
+```
+
+### 3. CREAR LA MATRIU DE CONTRAST
+A l'exemple de l'activitat ens han ensenyat a fer servir el paquet `limma`, que l'aplicarem ara. Farem servir la funció `makeContrasts()` per fer la matriu de contrast.
+
+```{r}
+matriu_contrast<-makeContrasts(
+  APOvsLUMI=APO - LUMI,
+  APOvsBAS= APO - BAS,
+  LUMIvsBAS= LUMI - BAS,
+  levels = matriu.disseny
+)
+print(matriu_contrast)
+```
+
+
+
+
+
+
+
+
